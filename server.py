@@ -3,7 +3,10 @@
 # april 2020
 from flask import Flask, request, jsonify
 import json
+from Battlesnake import Battlesnake
 app = Flask(__name__)
+
+game = Battlesnake()
 
 # some constants
 HEIGHT = 0
@@ -28,6 +31,9 @@ def ping():
 # called when we enter a game
 @app.route('/start', methods=['GET', 'POST'])
 def start():
+    # set up game
+    game.set_game(request.get_json())
+
     # set up snake
     return jsonify(color="#E8FF00", headType="tongue",
                    tailType="small-rattle")
@@ -36,35 +42,17 @@ def start():
 # called to get a move response
 @app.route('/move', methods=['GET', 'POST'])
 def move():
-    # prosess data
-    processed = processState(request.get_json())
-    height = processed[HEIGHT]
-    width = processed[WIDTH]
-    food = processed[FOOD]
-    enemies = processed[ENEMIES]
-    me = processed[ME]
-
-    # TODO DECIDE HOW TO MOVE
-
-    return jsonify(processed)
+    # for test
+    game.set_game(request.get_json())
+    move = game.move()
+    print(move)
+    return jsonify(success=True)
 
 
 # snake died or championed
 @app.route('/end', methods=['POST'])
 def end():
     return jsonify(success=True), 200
-
-
-# process board state and extract importatnt values
-def processState(data):
-    board = data.get('board')
-    height = board.get('height')
-    width = board.get('width')
-    food = board.get('food')
-    enemies = board.get('snakes')
-    me = data.get('you')
-
-    return height, width, food, enemies, me
 
 
 if __name__ == '__main__':
