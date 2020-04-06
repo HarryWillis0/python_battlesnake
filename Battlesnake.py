@@ -48,7 +48,7 @@ class Battlesnake:
             self.__valid_moves.remove("left")
         elif (direction == "up"):
             self.__valid_moves.remove("down")
-        else:
+        elif (direction == "down"):
             self.__valid_moves.remove("up")
 
 
