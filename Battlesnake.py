@@ -23,39 +23,42 @@ class Battlesnake:
         head = self.get_noggin()
         x = head[0]
         y = head[1]
-        direction = self.get_direction()
 
         # avoid walls naively?
         # head at bottom wall
-        if ((y != self.get_height() - 1) and direction != "up"):
+        if (y != self.get_height() - 1):
             self.__valid_moves.append("down")
         # head at top wall
-        if ((y != 0) and direction != "down"):
+        if (y != 0):
             self.__valid_moves.append("up")
         # head at right wall
-        if ((x != self.get_width() - 1) and direction != "left"):
+        if (x != self.get_width() - 1):
             self.__valid_moves.append("right")
         # head at left wall
-        if ((x != 0) and direction != "right"):
+        if (x != 0):
             self.__valid_moves.append("left")
 
+        self.remove_invalid(self.get_direction())
+
+    def remove_invalid(self, direction):
+        self.__valid_moves.remove(direction)
 
 # region GETTERS and some SETTERS
 
     # get the direction we're moving in
 
     def get_direction(self):
-        newHead = self.get_noggin()
+        new_head = self.get_noggin()
         direction = str()
         # naive approach
         # previous x is greater than current x
-        if (self.__direction[0] > newHead[0]):  # moving left
+        if (self.__direction[0] > new_head[0]):  # moving left
             direction = "left"
         # previous x is less than current x
-        elif (self.__direction[0] < newHead[0]):  # moving right
+        elif (self.__direction[0] < new_head[0]):  # moving right
             direction = "right"
         # previous y is greater than current y
-        elif (self.__direction[1] > newHead[1]):  # moving up
+        elif (self.__direction[1] > new_head[1]):  # moving up
             direction = "up"
         else:  # moving down OR it's first move and we don't have a direction yet
             direction = "down"
