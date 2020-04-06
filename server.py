@@ -31,8 +31,10 @@ def ping():
 # called when we enter a game
 @app.route('/start', methods=['GET', 'POST'])
 def start():
+    data = request.get_json()
     # set up game
-    game.set_game(request.get_json())
+    game.set_game(data)
+    game.set_direction(game.get_noggin())
 
     # set up snake
     return jsonify(color="#E8FF00", headType="tongue",
@@ -55,4 +57,4 @@ def end():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

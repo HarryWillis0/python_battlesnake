@@ -9,6 +9,7 @@ class Battlesnake:
     def __init__(self):
         self.__game = {}
         self.__valid_moves = []
+        self.__direction = []  # a point (x,y)
 
     # random move approach to get started
     # pick a random valid move
@@ -16,26 +17,56 @@ class Battlesnake:
         self.set_valid_moves()
         return random.choice(self.__valid_moves)
 
-    # find valid moves (don't go into walls for now)
+    # find valid moves (don't go into walls or myself for now)
     def set_valid_moves(self):
         self.__valid_moves.clear()
         head = self.get_noggin()
         x = head[0]
         y = head[1]
+        direction = self.get_direction()
 
         # avoid walls naively?
-        if (y != self.get_height() - 1):
+        # head at bottom wall
+        if ((y != self.get_height() - 1) and direction != "up"):
             self.__valid_moves.append("down")
-        if (y != 0):
+        # head at top wall
+        if ((y != 0) and direction != "down"):
             self.__valid_moves.append("up")
-        if (x != self.get_width() - 1):
+        # head at right wall
+        if ((x != self.get_width() - 1) and direction != "left"):
             self.__valid_moves.append("right")
-        if (x != 0):
+        # head at left wall
+        if ((x != 0) and direction != "right"):
             self.__valid_moves.append("left")
+
 
 # region GETTERS and some SETTERS
 
+    # get the direction we're moving in
+
+    def get_direction(self):
+        newHead = self.get_noggin()
+        direction = str()
+        # naive approach
+        # previous x is greater than current x
+        if (self.__direction[0] > newHead[0]):  # moving left
+            direction = "left"
+        # previous x is less than current x
+        elif (self.__direction[0] < newHead[0]):  # moving right
+            direction = "right"
+        # previous y is greater than current y
+        elif (self.__direction[1] > newHead[1]):  # moving up
+            direction = "up"
+        else:  # moving down OR it's first move and we don't have a direction yet
+            direction = "down"
+        return direction
+
+    # set direction
+    def set_direction(self, direction):
+        self.__direction = direction
+
     # set game
+
     def set_game(self, game):
         self.__game = game
 
@@ -58,5 +89,10 @@ class Battlesnake:
     # get the position of my head
     def get_noggin(self):
         return self.__game['you']['body'][0]['x'], self.__game['you']['body'][0]['y']
+
+    # get the position of my tail
+    def get_tail(self):
+        body = self.__game['you']['body']
+        return body[len(body) - 1]['x'], body[len(body) - 1]['y']
 
 # endregion
