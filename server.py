@@ -45,8 +45,7 @@ def move():
     # for test
     game.set_game(request.get_json())
     move = game.move()
-    print(move)
-    return jsonify(success=True)
+    return jsonify(move=move)
 
 
 # snake died or championed
@@ -56,4 +55,4 @@ def end():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
