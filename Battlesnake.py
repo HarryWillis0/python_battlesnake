@@ -40,8 +40,17 @@ class Battlesnake:
 
         self.remove_invalid(self.get_direction())
 
+    # remove the opposite to our direction from valid moves
     def remove_invalid(self, direction):
-        self.__valid_moves.remove(direction)
+        if (direction == "left"):
+            self.__valid_moves.remove("right")
+        elif (direction == "right"):
+            self.__valid_moves.remove("left")
+        elif (direction == "up"):
+            self.__valid_moves.remove("down")
+        else:
+            self.__valid_moves.remove("up")
+
 
 # region GETTERS and some SETTERS
 
