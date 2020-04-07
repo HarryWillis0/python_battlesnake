@@ -1,110 +1,146 @@
 # Battlesnake.py
-# a battlesnake game class
+# represents a battlesnake game
+# Properties:
+#   1. game_state -> json data with stuff like food position, snake position, height...
+#   2. valid_moves -> each move request we find valid moves to choose randomly from (for now)
+#   3. prev_head -> used to save the position of my head on the previous move.
+#                       Using the current we can get our direction
+#   4. me -> list of coordinates that represents my position on the board
 #
 import random
+from coordinates import Coordinate
 
 
 class Battlesnake:
     # default
     def __init__(self):
-        self.__game = {}
+        self.__game_state = {}
         self.__valid_moves = []
-        self.__direction = []  # a point (x,y)
+        self.__prev_head = []  # a point (x,y)
+        self.__me = []
 
     # random move approach to get started
     # pick a random valid move
     def move(self):
         self.set_valid_moves()
+
+        # save current head position
+        self.set_prev_head(self.get_noggin())
+
         return random.choice(self.__valid_moves)
 
     # find valid moves (don't go into walls or myself for now)
     def set_valid_moves(self):
-        self.__valid_moves.clear()
-        head = self.get_noggin()
-        x = head[0]
-        y = head[1]
+        # start with all moves being valid and remove invalid as we go
+        self.__valid_moves = ["left", "right", "up", "down"]
 
-        # avoid walls naively?
-        # head at bottom wall
-        if (y != self.get_height() - 1):
-            self.__valid_moves.append("down")
-        # head at top wall
-        if (y != 0):
-            self.__valid_moves.append("up")
-        # head at right wall
-        if (x != self.get_width() - 1):
-            self.__valid_moves.append("right")
-        # head at left wall
-        if (x != 0):
-            self.__valid_moves.append("left")
+        # avoid walls / myself
+        self.basic_avoidance()
 
-        self.remove_invalid(self.get_direction())
+        return random.choice(self.__valid_moves)
 
-    # remove the opposite to our direction from valid moves
-    def remove_invalid(self, direction):
-        if (direction == "left"):
+    # remove moves that will turn back into myself
+    #   and walls
+    def basic_avoidance(self):
+        # get which way we are facing
+        direction = self.get_direction()
+        new_head = self.get_noggin()
+
+        # ** these are not one or the other **
+        # at right wall (x = length - 1), DONT move RIGHT
+        # if direction is left, also DONT move RIGHT
+        if (new_head['x'] == self.get_width() - 1 or direction == "left"):
             self.__valid_moves.remove("right")
-        elif (direction == "right"):
-            self.__valid_moves.remove("left")
-        elif (direction == "up"):
-            self.__valid_moves.remove("down")
-        else:
-            self.__valid_moves.remove("up")
 
+        # at left wall (x = 0), DONT move LEFT
+        # if direction is right, also DONT move LEFT
+        if (new_head['x'] == 0 or direction == "right"):
+            self.__valid_moves.remove("left")
+
+        # at bottom wall (y = height - 1), DONT move DOWN
+        # if direction is up, also DONT move DOWN
+        if (new_head['y'] == self.get_height() - 1 or direction == "up"):
+            self.__valid_moves.remove("down")
+
+        # top wall (y = 0), DONT move UP
+        # if direction is down, also DONT move UP
+        if (new_head['y'] == 0 or direction == "down"):
+            self.__valid_moves.remove("up")
 
 # region GETTERS and some SETTERS
 
     # get the direction we're moving in
-
+    # this should only be called after self.__game_state is updated
+    # REWORK
     def get_direction(self):
         new_head = self.get_noggin()
         direction = str()
         # naive approach
-        # previous x is greater than current x
-        if (self.__direction[0] > new_head[0]):  # moving left
-            direction = "left"
-        # previous x is less than current x
-        elif (self.__direction[0] < new_head[0]):  # moving right
+        # previous x is one to the left of new one -> we're facing right
+        if (self.__prev_head['x'] + 1 == new_head['x']):
             direction = "right"
-        # previous y is greater than current y
-        elif (self.__direction[1] > new_head[1]):  # moving up
-            direction = "up"
-        else:  # moving down OR it's first move and we don't have a direction yet
+
+        # previous x is one to the right of new one -> we're facing left
+        elif (self.__prev_head['x'] - 1 == new_head['x']):
+            direction = "left"
+
+        # previous y is one above new one -> facing down
+        elif (self.__prev_head['y'] + 1 == new_head['y']):
             direction = "down"
+
+        # previous y is below new one -> facing up
+        elif (self.__prev_head['y'] - 1 == new_head['y']):
+            direction = "up"
+
+        # empty string returned on first move
         return direction
 
-    # set direction
-    def set_direction(self, direction):
-        self.__direction = direction
+    # set previous head (x,y)
+    def set_prev_head(self, prev_head):
+        self.__prev_head = prev_head
 
-    # set game
-
-    def set_game(self, game):
-        self.__game = game
-
-    # get height of board
-    def get_height(self):
-        return self.__game['board']['height']
-
-    # get width of board
-    def get_width(self):
-        return self.__game['board']['width']
+    # set game state
+    def set_state(self, game):
+        self.__game_state = game
 
     # get enemies (includes me)
+    # REWORK
+    # TODO loop through, testing for me -> (head will be at same posiiotn) to remove myself
     def get_enemies(self):
-        return self.__game['board']['snakes']
+        return self.__game_state['board']['snakes']
 
-    # get me
+    # set me from game state
+    def set_me(self):
+        self.__me.clear()
+        # for each json {'x': <> , 'y': <>} transform into Coordinate
+        #   and add to self.__me
+        for coord in self.__game_state['you']['body']:
+            self.__me.append(Coordinate({'x': coord['x'], 'y': coord['y']}))
+
+    # get me (testing)
     def get_me(self):
-        return self.__game['you']
+        return self.__me
 
     # get the position of my head
     def get_noggin(self):
-        return self.__game['you']['body'][0]['x'], self.__game['you']['body'][0]['y']
+        head = self.__me[0]
+        return head
 
     # get the position of my tail
     def get_tail(self):
-        body = self.__game['you']['body']
-        return body[len(body) - 1]['x'], body[len(body) - 1]['y']
+        tail = self.__me[len(self.__me) - 1]
+        return tail
+
+    # get the width of the board
+    def get_width(self):
+        return self.__game_state['board']['width']
+
+    # get the height of the board
+    def get_height(self):
+        return self.__game_state['board']['height']
+
+    # get valid moves (for testing)
+    def get_valid(self):
+        return self.__valid_moves
 
 # endregion

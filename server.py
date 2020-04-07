@@ -4,6 +4,11 @@
 from flask import Flask, request, jsonify
 import json
 from Battlesnake import Battlesnake
+
+# for testing
+from coordinates import Coordinate
+
+
 app = Flask(__name__)
 
 game = Battlesnake()
@@ -33,10 +38,10 @@ def ping():
 def start():
     data = request.get_json()
     # set up game
-    game.set_game(data)
-    game.set_direction(game.get_noggin())
+    game.set_state(data)
+    game.set_me()
+    game.set_prev_head(game.get_noggin())
 
-    # set up snake
     return jsonify(color="#E8FF00", headType="tongue",
                    tailType="small-rattle")
 
@@ -44,9 +49,12 @@ def start():
 # called to get a move response
 @app.route('/move', methods=['GET', 'POST'])
 def move():
-    # for test
-    game.set_game(request.get_json())
+    data = request.get_json()
+
+    game.set_state(data)
+
     move = game.move()
+
     return jsonify(move=move)
 
 
