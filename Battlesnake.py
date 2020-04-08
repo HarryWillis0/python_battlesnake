@@ -49,22 +49,22 @@ class Battlesnake:
         # ** these are not one or the other **
         # at right wall (x = length - 1), DONT move RIGHT
         # if direction is left, also DONT move RIGHT
-        if (new_head['x'] == self.get_width() - 1 or direction == "left"):
+        if (new_head['x'] == self.get_width() - 1):
             self.__valid_moves.remove("right")
 
         # at left wall (x = 0), DONT move LEFT
         # if direction is right, also DONT move LEFT
-        if (new_head['x'] == 0 or direction == "right"):
+        if (new_head['x'] == 0):
             self.__valid_moves.remove("left")
 
         # at bottom wall (y = height - 1), DONT move DOWN
         # if direction is up, also DONT move DOWN
-        if (new_head['y'] == self.get_height() - 1 or direction == "up"):
+        if (new_head['y'] == self.get_height() - 1):
             self.__valid_moves.remove("down")
 
         # top wall (y = 0), DONT move UP
         # if direction is down, also DONT move UP
-        if (new_head['y'] == 0 or direction == "down"):
+        if (new_head['y'] == 0):
             self.__valid_moves.remove("up")
 
 # region GETTERS and some SETTERS
