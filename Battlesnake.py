@@ -81,15 +81,15 @@ class Battlesnake:
             direction = "right"
 
         # previous x is one to the right of new one -> we're facing left
-        elif (self.__prev_head['x'] - 1 == new_head['x']):
+        if (self.__prev_head['x'] - 1 == new_head['x']):
             direction = "left"
 
         # previous y is one above new one -> facing down
-        elif (self.__prev_head['y'] + 1 == new_head['y']):
+        if (self.__prev_head['y'] + 1 == new_head['y']):
             direction = "down"
 
         # previous y is below new one -> facing up
-        elif (self.__prev_head['y'] - 1 == new_head['y']):
+        if (self.__prev_head['y'] - 1 == new_head['y']):
             direction = "up"
 
         # empty string returned on first move
