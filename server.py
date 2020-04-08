@@ -7,7 +7,7 @@ from Battlesnake import Battlesnake
 
 app = Flask(__name__)
 game = Battlesnake()
-
+move = "left"
 # snake birth
 @app.route('/')
 def index():
@@ -41,9 +41,9 @@ def move():
     data = request.get_json()
     game.set_state(data)
 
-    move = game.move()
+    #move = game.move()
 
-    return jsonify(move="left")
+    return jsonify(move=move)
 
 
 # snake died or championed
