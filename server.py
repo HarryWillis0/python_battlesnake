@@ -6,7 +6,6 @@ import json
 from Battlesnake import Battlesnake
 
 app = Flask(__name__)
-
 game = Battlesnake()
 
 # snake birth
@@ -25,8 +24,8 @@ def ping():
 # called when we enter a game
 @app.route('/start', methods=['GET', 'POST'])
 def start():
+    # setup
     data = request.get_json()
-    # set up game
     game.set_state(data)
     game.set_me()
     game.set_prev_head(game.get_noggin())
@@ -38,8 +37,8 @@ def start():
 # called to get a move response
 @app.route('/move', methods=['GET', 'POST'])
 def move():
+    # setup
     data = request.get_json()
-
     game.set_state(data)
 
     move = game.move()
