@@ -43,7 +43,7 @@ def move():
 
     move = game.move()
 
-    return jsonify(move=move)
+    return jsonify(move="left")
 
 
 # snake died or championed
