@@ -61,6 +61,11 @@ class Battlesnake:
         # if direction is up, also DONT move DOWN
         if (new_head['y'] == self.get_height() - 1 or direction == "up"):
             self.__valid_moves.remove("down")
+<<<<<<< HEAD
+=======
+        elif (direction == "down"):
+            self.__valid_moves.remove("up")
+>>>>>>> master
 
         # top wall (y = 0), DONT move UP
         # if direction is down, also DONT move UP
