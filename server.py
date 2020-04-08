@@ -5,20 +5,9 @@ from flask import Flask, request, jsonify
 import json
 from Battlesnake import Battlesnake
 
-# for testing
-from coordinates import Coordinate
-
-
 app = Flask(__name__)
 
 game = Battlesnake()
-
-# some constants
-HEIGHT = 0
-WIDTH = 1
-FOOD = 2
-ENEMIES = 3
-ME = 4
 
 # snake birth
 @app.route('/')
