@@ -3,6 +3,8 @@
 # Properties:
 #   1. game_state -> json data with stuff like food position, snake position, height...
 #
+# TODO implement finding food strategy
+
 import random
 from coordinates import Coordinate
 

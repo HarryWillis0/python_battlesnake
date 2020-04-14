@@ -7,13 +7,10 @@ from Battlesnake import Battlesnake
 
 app = Flask(__name__)
 
-# TODO set up a session so we can save battlesnake state
-
 # snake birth
 @app.route('/')
 def index():
     return "IM ALIVE MUAHAHAHAA"
-
 
 # called to see if snake is functional
 # only needs ok status response
@@ -21,14 +18,12 @@ def index():
 def ping():
     return jsonify(success=True), 200
 
-
 # called when we enter a game
 @app.route('/start', methods=['GET', 'POST'])
 def start():
 
     return jsonify(color="#E8FF00", headType="tongue",
                    tailType="small-rattle")
-
 
 # called to get a move response
 @app.route('/move', methods=['GET', 'POST'])
@@ -38,7 +33,6 @@ def move():
     move = game.move()
 
     return jsonify(move=move)
-
 
 # snake died or championed
 @app.route('/end', methods=['POST'])
