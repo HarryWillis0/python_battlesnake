@@ -18,7 +18,7 @@ class Battlesnake:
         print(valid_moves)
         return random.choice(valid_moves)
 
-    # find valid moves (don't go into walls or myself for now)
+    # find valid moves (don't go into walls or snakes for now)
     def get_valid_moves(self):
         # start with all moves being valid and remove invalid as we go
         valid_moves = ["left", "right", "up", "down"]
@@ -39,7 +39,7 @@ class Battlesnake:
         self.check_wall_right(me, valid_moves)
         self.check_wall_bottom(me, valid_moves)
         self.check_wall_top(me, valid_moves)
-
+        print("VALID MOVES AFTER CHECKING WALLS: ", valid_moves)
         # loop through 'snakes' seeing if a move is invalid
         for snake in self.__game_state['board']['snakes']:  # for each snake
             for body in snake['body']:
@@ -50,6 +50,8 @@ class Battlesnake:
                 if (valid_moves.count("right") > 0):
                     self.check_right(valid_moves, me, coordinate)
                 if (valid_moves.count("up") > 0):
+                    print(
+                        f"checking up with ME: {me[0]['x']} and other as {coordinate}")
                     self.check_up(valid_moves, me, coordinate)
                 if (valid_moves.count("down") > 0):
                     self.check_down(valid_moves, me, coordinate)
@@ -87,12 +89,12 @@ class Battlesnake:
         if (me[0]['x'] + 1 == coord['x'] and me[0]['y'] == coord['y']):
             valid_moves.remove("right")
 
-    def check_up(self, valid_moves, me, coord):
+    def check_down(self, valid_moves, me, coord):
         # moving head down runs into coord
         if (me[0]['y'] + 1 == coord['y'] and me[0]['x'] == coord['x']):
             valid_moves.remove("down")
 
-    def check_down(self, valid_moves, me, coord):
+    def check_up(self, valid_moves, me, coord):
         # moving head up runs into coord
         if (me[0]['y'] - 1 == coord['y'] and me[0]['x'] == coord['x']):
             valid_moves.remove("up")
